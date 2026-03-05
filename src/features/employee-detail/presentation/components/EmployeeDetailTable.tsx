@@ -4,29 +4,26 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Link } from "react-router-dom";
-import type { Employee } from "../../domain/employee.types";
+import type { EmployeeDetail } from "../../domain/employee-detail.types";
 
-const columnHelper = createColumnHelper<Employee>();
+const columnHelper = createColumnHelper<EmployeeDetail>();
 
 const columns = [
   columnHelper.accessor((row) => `${row.firstName} ${row.lastName}`, {
     id: "name",
     header: "Name",
-    cell: (info) => (
-      <Link
-        to={`/employees/${info.row.original.id}`}
-        className="text-blue-600 hover:text-blue-800 hover:underline"
-      >
-        {info.getValue()}
-      </Link>
-    ),
+  }),
+  columnHelper.accessor("email", {
+    header: "Email",
   }),
   columnHelper.accessor("position", {
     header: "Position",
   }),
   columnHelper.accessor("department", {
     header: "Department",
+  }),
+  columnHelper.accessor("startDate", {
+    header: "Start Date",
   }),
   columnHelper.accessor("status", {
     header: "Status",
@@ -52,11 +49,11 @@ const columns = [
   }),
 ];
 
-interface EmployeesTableProps {
-  employees: Employee[];
+interface EmployeeDetailTableProps {
+  employees: EmployeeDetail[];
 }
 
-export function EmployeesTable({ employees }: EmployeesTableProps) {
+export function EmployeeDetailTable({ employees }: EmployeeDetailTableProps) {
   const table = useReactTable({
     data: employees,
     columns,
@@ -87,8 +84,14 @@ export function EmployeesTable({ employees }: EmployeesTableProps) {
           {table.getRowModel().rows.map((row) => (
             <tr key={row.id} className="hover:bg-gray-50">
               {row.getVisibleCells().map((cell) => (
-                <td key={cell.id} className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                <td
+                  key={cell.id}
+                  className="whitespace-nowrap px-6 py-4 text-sm text-gray-900"
+                >
+                  {flexRender(
+                    cell.column.columnDef.cell,
+                    cell.getContext()
+                  )}
                 </td>
               ))}
             </tr>
