@@ -4,7 +4,9 @@
       "Bash(npm install:*)",
       "Bash(npm run:*)",
       "Bash(npm audit:*)",
-      "Bash(npm outdated:*)"
+      "Bash(npm outdated:*)",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__query-docs"
     ]
   }
 }
