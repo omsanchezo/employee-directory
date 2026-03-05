@@ -18,7 +18,7 @@ const employeeSchema = z.object({
 
 type EmployeeFormData = z.infer<typeof employeeSchema>;
 
-export function EmployeeCreateForm({ onSuccess }: { onSuccess?: () => void }) {
+export function EmployeeCreateForm({ onSuccess, onCancel }: { onSuccess?: () => void; onCancel?: () => void }) {
   const [addEmployee, { isLoading }] = useAddEmployeeMutation();
   const { data: departments = [] } = useGetDepartmentsQuery();
 
@@ -55,16 +55,16 @@ export function EmployeeCreateForm({ onSuccess }: { onSuccess?: () => void }) {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
-          <label className={labelClass}>First Name</label>
-          <input {...register("firstName")} className={inputClass} />
+          <label htmlFor="firstName" className={labelClass}>First Name</label>
+          <input id="firstName" {...register("firstName")} className={inputClass} />
           {errors.firstName && (
             <p className={errorClass}>{errors.firstName.message}</p>
           )}
         </div>
 
         <div>
-          <label className={labelClass}>Last Name</label>
-          <input {...register("lastName")} className={inputClass} />
+          <label htmlFor="lastName" className={labelClass}>Last Name</label>
+          <input id="lastName" {...register("lastName")} className={inputClass} />
           {errors.lastName && (
             <p className={errorClass}>{errors.lastName.message}</p>
           )}
@@ -72,16 +72,16 @@ export function EmployeeCreateForm({ onSuccess }: { onSuccess?: () => void }) {
       </div>
 
       <div>
-        <label className={labelClass}>Email</label>
-        <input type="email" {...register("email")} className={inputClass} />
+        <label htmlFor="email" className={labelClass}>Email</label>
+        <input id="email" type="email" {...register("email")} className={inputClass} />
         {errors.email && (
           <p className={errorClass}>{errors.email.message}</p>
         )}
       </div>
 
       <div>
-        <label className={labelClass}>Position</label>
-        <input {...register("position")} className={inputClass} />
+        <label htmlFor="position" className={labelClass}>Position</label>
+        <input id="position" {...register("position")} className={inputClass} />
         {errors.position && (
           <p className={errorClass}>{errors.position.message}</p>
         )}
@@ -89,8 +89,8 @@ export function EmployeeCreateForm({ onSuccess }: { onSuccess?: () => void }) {
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
-          <label className={labelClass}>Department</label>
-          <select {...register("department")} className={inputClass}>
+          <label htmlFor="department" className={labelClass}>Department</label>
+          <select id="department" {...register("department")} className={inputClass}>
             <option value="">Select department</option>
             {departments.map((dept) => (
               <option key={dept.id} value={dept.name}>
@@ -104,8 +104,8 @@ export function EmployeeCreateForm({ onSuccess }: { onSuccess?: () => void }) {
         </div>
 
         <div>
-          <label className={labelClass}>Status</label>
-          <select {...register("status")} className={inputClass}>
+          <label htmlFor="status" className={labelClass}>Status</label>
+          <select id="status" {...register("status")} className={inputClass}>
             <option value="active">Active</option>
             <option value="inactive">Inactive</option>
           </select>
@@ -116,20 +116,31 @@ export function EmployeeCreateForm({ onSuccess }: { onSuccess?: () => void }) {
       </div>
 
       <div>
-        <label className={labelClass}>Start Date</label>
-        <input type="date" {...register("startDate")} className={inputClass} />
+        <label htmlFor="startDate" className={labelClass}>Start Date</label>
+        <input id="startDate" type="date" {...register("startDate")} className={inputClass} />
         {errors.startDate && (
           <p className={errorClass}>{errors.startDate.message}</p>
         )}
       </div>
 
-      <button
-        type="submit"
-        disabled={isLoading}
-        className="rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 disabled:opacity-50"
-      >
-        {isLoading ? "Creating..." : "Create Employee"}
-      </button>
+      <div className="flex items-center gap-3">
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="min-h-[44px] rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:opacity-50"
+        >
+          {isLoading ? "Creating..." : "Save Employee"}
+        </button>
+        {onCancel && (
+          <button
+            type="button"
+            onClick={onCancel}
+            className="min-h-[44px] rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm transition-colors hover:bg-gray-50"
+          >
+            Cancel
+          </button>
+        )}
+      </div>
     </form>
   );
 }
