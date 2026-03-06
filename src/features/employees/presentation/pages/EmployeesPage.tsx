@@ -1,11 +1,19 @@
-import { useState } from "react";
-import { useGetEmployeesQuery } from "../../data/employeesApi";
+import { useMemo, useState } from "react";
+import { useGetEmployeesQuery, useGetDepartmentsQuery } from "../../data/employeesApi";
 import { EmployeesTable } from "../components/EmployeesTable";
 import { EmployeeCreateForm } from "../components/EmployeeCreateForm";
 
 export function EmployeesPage() {
   const { data: employees, isLoading, error, refetch } = useGetEmployeesQuery();
+  const { data: departments } = useGetDepartmentsQuery();
   const [showForm, setShowForm] = useState(false);
+  const [selectedDepartment, setSelectedDepartment] = useState("all");
+
+  const filteredEmployees = useMemo(() => {
+    if (!employees) return undefined;
+    if (selectedDepartment === "all") return employees;
+    return employees.filter((e) => e.department === selectedDepartment);
+  }, [employees, selectedDepartment]);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-6 sm:p-6">
@@ -52,7 +60,29 @@ export function EmployeesPage() {
         </div>
       )}
 
-      {employees && <EmployeesTable employees={employees} />}
+      {filteredEmployees && (
+        <>
+          <div className="mb-4">
+            <label htmlFor="department-filter" className="mr-2 text-sm font-medium text-gray-700">
+              Department:
+            </label>
+            <select
+              id="department-filter"
+              value={selectedDepartment}
+              onChange={(e) => setSelectedDepartment(e.target.value)}
+              className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            >
+              <option value="all">All</option>
+              {departments?.map((dept) => (
+                <option key={dept.id} value={dept.name}>
+                  {dept.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <EmployeesTable employees={filteredEmployees} />
+        </>
+      )}
     </div>
   );
 }
