@@ -23,7 +23,8 @@
       "mcp__github-personal__get_pull_request_files",
       "mcp__github-personal__merge_pull_request",
       "mcp__github-personal__add_issue_comment",
-      "mcp__github-personal__update_issue"
+      "mcp__github-personal__update_issue",
+      "Bash(npx tsc:*)"
     ]
   }
 }
