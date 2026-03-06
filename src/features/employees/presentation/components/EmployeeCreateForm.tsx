@@ -1,22 +1,10 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import {
   useAddEmployeeMutation,
   useGetDepartmentsQuery,
 } from "../../data/employeesApi";
-
-const employeeSchema = z.object({
-  firstName: z.string().min(2, "First name must be at least 2 characters"),
-  lastName: z.string().min(2, "Last name must be at least 2 characters"),
-  email: z.string().email("Invalid email address"),
-  position: z.string().min(1, "Position is required"),
-  department: z.string().min(1, "Department is required"),
-  startDate: z.string().min(1, "Start date is required"),
-  status: z.enum(["active", "inactive"]),
-});
-
-type EmployeeFormData = z.infer<typeof employeeSchema>;
+import { employeeSchema, type EmployeeFormData } from "../../domain/employee.schema";
 
 export function EmployeeCreateForm({ onSuccess, onCancel }: { onSuccess?: () => void; onCancel?: () => void }) {
   const [addEmployee, { isLoading }] = useAddEmployeeMutation();
@@ -41,9 +29,13 @@ export function EmployeeCreateForm({ onSuccess, onCancel }: { onSuccess?: () => 
   });
 
   const onSubmit = async (data: EmployeeFormData) => {
-    await addEmployee(data).unwrap();
-    reset();
-    onSuccess?.();
+    try {
+      await addEmployee(data).unwrap();
+      reset();
+      onSuccess?.();
+    } catch {
+      // Error is captured in the hook's error state
+    }
   };
 
   const inputClass =
