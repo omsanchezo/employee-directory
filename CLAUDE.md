@@ -47,6 +47,10 @@ The `db.json` file at the project root serves as the mock REST API (json-server)
 
 - Always use context7 to check up-to-date docs when implementing or modifying code that uses RTK Query, React Hook Form, Zod, TanStack Table, or any third-party library.
 
+## Git Policy
+
+- NEVER commit or push unless the user explicitly requests it.
+
 ## Mock API
 
 - JSON Server running on `http://localhost:3001`
